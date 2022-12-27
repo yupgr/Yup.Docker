@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.11.5-management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_VHOST=vhost
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    restart: always
+
+volumes:
+  rabbitmq-data:
