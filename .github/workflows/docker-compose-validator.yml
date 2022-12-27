@@ -10,6 +10,11 @@ jobs:
       - name: Find Docker Compose files
         run: |
           find . -path "*/RabbitMQ/*" -name "docker-compose*.yml" -print0 | xargs -0 -n1 dirname | sort -u > docker-compose-files.txt
+      - name: Print Docker Compose files
+        run: |
+          while read -r file; do
+            echo "Checking Docker Compose file: $file/docker-compose.yml"
+          done < docker-compose-files.txt
       - name: Validate Docker Compose files
         run: |
           while read -r file; do
