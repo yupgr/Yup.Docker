@@ -7,9 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up folders
+        #add any folders you want to check in the folders.txt
+        run: |
+          echo "RabbitMQ" > folders.txt
       - name: Find Docker Compose files
         run: |
-          find . -path "*/RabbitMQ/*" -name "docker-compose*.yml" -print0 | xargs -0 -n1 dirname | sort -u > docker-compose-files.txt
+          while read -r folder; do
+            find . -path "*/$folder/*" -name "docker-compose*.yml" -print0 | xargs -0 -n1 dirname | sort -u >> docker-compose-files.txt
+          done < folders.txt
       - name: Print Docker Compose files
         run: |
           while read -r file; do
