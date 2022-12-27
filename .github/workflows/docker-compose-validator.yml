@@ -1,0 +1,21 @@
+name: Validate Docker Compose YAML
+
+on: [push]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Find Docker Compose files
+        run: |
+          find . -name "docker-compose*.yml" -print0 | xargs -0 -n1 dirname | sort -u > docker-compose-files.txt
+      - name: Validate Docker Compose files
+        run: |
+          while read -r file; do
+            docker-compose -f "$file/docker-compose.yml" config --quiet
+            if [ $? -ne 0 ]; then
+              echo "Error: invalid Docker Compose file found in $file"
+              exit 1
+            fi
+          done < docker-compose-files.txt
